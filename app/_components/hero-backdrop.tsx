@@ -2,8 +2,9 @@
 
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 
-/** Drop your clip at this path. Nothing else needs to change. */
+/** Drop your clip at these paths. Nothing else needs to change. */
 const CLIP = "/media/hero.mp4";
+const POSTER = "/media/hero-poster.jpg";
 
 const QUERY = "(prefers-reduced-motion: reduce)";
 
@@ -57,16 +58,17 @@ export default function HeroBackdrop() {
         className="absolute inset-0 bg-ink bg-[radial-gradient(120%_90%_at_72%_8%,var(--color-iron)_0%,var(--color-ink)_55%,#0d0a08_100%)]"
       />
 
+      {/* The poster is frame zero of the clip, so it paints immediately and
+          playback starts from the identical image with nothing to fade. */}
       <video
         ref={video}
-        className={`absolute inset-0 size-full object-cover brightness-90 saturate-[0.95] transition-opacity duration-[1200ms] ${
-          ready ? "opacity-100" : "opacity-0"
-        }`}
+        className="absolute inset-0 size-full object-cover brightness-90 saturate-[0.95]"
+        poster={POSTER}
         muted
         loop
         playsInline
-        preload="metadata"
-        onCanPlay={() => setReady(true)}
+        preload="auto"
+        onLoadedData={() => setReady(true)}
       >
         <source src={CLIP} type="video/mp4" />
       </video>

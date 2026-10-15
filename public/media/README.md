@@ -1,18 +1,39 @@
-# Hero clip
+# Hero media
 
-Drop the background video here as `hero.mp4`. The hero reads it from
-`/media/hero.mp4` (see `CLIP` in `app/_components/hero-backdrop.tsx`).
+Two files drive the hero backdrop:
 
-What works well:
-- 8–15 seconds, seamless loop, no cuts.
-- 1920×1080, H.264, **no audio track** (it is muted anyway; dropping audio saves weight).
-- Target under ~4 MB so it is not fighting the first paint.
-- Slow, wide footage — a rack, chalk in the air, one lift. Fast cuts fight the type.
+- `hero.mp4` — the background clip
+- `hero-poster.jpg` — **frame zero of that clip**, shown instantly while the
+  video streams
 
-Compress with ffmpeg:
+Both paths are set at the top of `app/_components/hero-backdrop.tsx`.
 
-    ffmpeg -i source.mov -t 12 -an -vf "scale=1920:-2" \
-      -c:v libx264 -crf 28 -preset slow -movflags +faststart hero.mp4
+The poster must be frame zero of the clip. If it is any other frame, you see a
+visible jump the moment playback starts.
 
-Until a file is here, the designed fallback (warm light, grain, scrim) shows
-instead — the section is not broken without it.
+## Replacing the clip
+
+Keep the master in `media-src/` (outside `public/`, so it is never served) and
+generate the web copies from it:
+
+    # clip: trim to the window you want, no audio, faststart for progressive play
+    ffmpeg -y -ss 0 -t 8 -i media-src/hero-original.mp4 -an \
+      -c:v libx264 -crf 30 -preset slow -profile:v high -pix_fmt yuv420p \
+      -movflags +faststart public/media/hero.mp4
+
+    # poster: frame zero of the SOURCE, matching the clip's start point
+    ffmpeg -y -ss 0 -i media-src/hero-original.mp4 -frames:v 1 \
+      -vf "scale=1280:-2" -q:v 6 public/media/hero-poster.jpg
+
+If you change the `-ss` start on the clip, use the same `-ss` on the poster.
+
+## What works
+
+- 8-15 seconds, slow and wide. Fast cuts fight the type.
+- No audio track. It is muted anyway, and dropping it saves weight.
+- Under ~1 MB. Current clip is 0.87 MB at crf 30, which is plenty behind the scrim.
+- Watch for text in frame. The scrim holds the top down, but legible signage
+  still competes with the headline.
+
+With neither file present the designed fallback (warm light, grain, scrim)
+shows instead, so the section is never broken.

@@ -1,15 +1,10 @@
+import { MAPS, PHONE, TEL } from "../_lib/site";
 import HeroBackdrop from "./hero-backdrop";
-
-const MAPS =
-  "https://www.google.com/maps/place/Body+fitness+Gym/@33.5302508,-7.645914,17z";
-
-/* Replace with the real desk number before this goes live. */
-const PHONE = "+212 5 22 00 00 00";
 
 const facts = [
   { label: "Open", value: "Daily, 06:00 — 23:00" },
   { label: "Where", value: "Casablanca, Morocco", href: MAPS },
-  { label: "Front desk", value: PHONE, href: `tel:${PHONE.replace(/\s/g, "")}` },
+  { label: "Front desk", value: PHONE, href: TEL },
 ];
 
 export default function Hero() {
@@ -25,7 +20,7 @@ export default function Hero() {
           Body&nbsp;Fitness
         </a>
         <a
-          href={`tel:${PHONE.replace(/\s/g, "")}`}
+          href={TEL}
           className="text-[0.8rem] text-chalk/70 underline decoration-brass/50 decoration-1 underline-offset-[6px] transition hover:text-chalk hover:decoration-brass focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brass"
         >
           Call the desk
@@ -50,7 +45,7 @@ export default function Hero() {
           style={{ animationDelay: "300ms" }}
         >
           <a
-            href={`tel:${PHONE.replace(/\s/g, "")}`}
+            href={TEL}
             className="inline-flex items-center justify-center bg-brass px-8 py-4 text-[0.95rem] font-medium text-ink transition hover:bg-brass-lit focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-brass-lit"
           >
             Book a visit

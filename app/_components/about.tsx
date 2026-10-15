@@ -91,7 +91,7 @@ export default function About() {
         </div>
         {/* Second in the markup so she looks back across the copy, not off the
             page; on mobile `order-first` puts the photograph up top again. */}
-        <Reveal className="reveal-frame relative order-first min-h-[28rem] sm:min-h-[36rem] lg:order-none lg:min-h-[48rem]">
+        <Reveal className="reveal-frame relative order-first min-h-[70svh] sm:min-h-[80svh] lg:order-none lg:min-h-[100svh]">
           <Image
             src="/images/back.jpg"
             alt="A member under the bar mid-set on the rig at Body Fitness."

@@ -81,6 +81,36 @@ body {
   }
 }
 
+/* No scrollbars anywhere, by request — the page's, the equipment gallery's,
+   and any scroller added later. Nothing else changes: everything still scrolls
+   by wheel, touch, keys and trackpad, and the stack carries its own position
+   ("02 / 05") as the cue the bar used to give. */
+* {
+  scrollbar-width: none;
+}
+
+*::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+@keyframes nudge {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.55;
+  }
+  50% {
+    transform: translateY(0.3rem);
+    opacity: 1;
+  }
+}
+
+.nudge {
+  animation: nudge 2.6s ease-in-out infinite;
+}
+
 /* The one orchestrated moment: the opening lines settle into place once. */
 @keyframes settle {
   from {
@@ -98,9 +128,15 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .settle {
+  .settle,
+  .nudge {
     animation: none;
   }
+
+  .no-scrollbar {
+    scroll-behavior: auto;
+  }
+
   .reveal,
   .reveal-frame,
   .reveal-frame img {

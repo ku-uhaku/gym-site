@@ -40,7 +40,7 @@ export default function Equipment() {
     <section
       id="equipment"
       aria-labelledby="equipment-title"
-      className="relative isolate h-[100svh] overflow-hidden bg-ink"
+      className="snap-section relative isolate h-[100svh] overflow-hidden bg-ink"
     >
       {/* Sits over the scroller, so the label holds still while the
           photographs slide underneath it. */}
@@ -63,6 +63,7 @@ export default function Equipment() {
           hands scrolling back. */}
       <div
         role="region"
+        data-inner-scroll
         aria-label="Equipment photographs, one per screen"
         tabIndex={0}
         className="no-scrollbar h-full snap-y snap-mandatory scroll-smooth overflow-y-scroll focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-brass"

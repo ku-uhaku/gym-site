@@ -1,6 +1,7 @@
 import Image from "next/image";
 
 import Reveal from "./reveal";
+import SnapRail from "./snap-rail";
 
 /* Figures are placeholders, like the desk number — swap for the owner's. */
 const numbers = [
@@ -20,8 +21,10 @@ export default function About() {
     <section
       id="about"
       aria-labelledby="about-title"
-      className="grain relative isolate overflow-hidden bg-ink"
+      className="snap-section grain relative isolate overflow-hidden bg-ink"
     >
+      <SnapRail />
+
       <div className="grid lg:grid-cols-[1fr_48%] lg:items-stretch 2xl:grid-cols-[1fr_56%]">
         <div className="flex items-center px-6 py-20 sm:px-10 sm:py-24 lg:py-28 lg:pl-16 lg:pr-20">
           <div className="w-full max-w-[38rem]">

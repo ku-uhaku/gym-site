@@ -4,7 +4,9 @@
    A warm, iron-dark palette. The dark is espresso and oxidised metal,
    never flat black, so video sits inside the page instead of behind it. */
 @theme {
+  --color-pitch: #110e0c;
   --color-ink: #171310;
+  --color-ash: #1f1a15;
   --color-iron: #2b2520;
   --color-oxblood: #40181c;
   --color-chalk: #ede7db;
@@ -95,6 +97,135 @@ body {
   height: 0;
 }
 
+/* The viewport's own scrollbar is taken from <html>, and can be propagated
+   from <body>, so it does not always follow the `*` rule above. Stated on
+   both explicitly. */
+html,
+body {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+/* ── Section grounds ──────────────────────────────────────────────
+   Four dark sections in a row read as one slab, so the ground moves under
+   them: pitch, ink, ash — the same espresso, one rung apart each time.
+
+   The move is a wash, not a line. Each band starts at the ground of the
+   section above it and resolves into its own over the first screenful, so at
+   every seam both sides are the identical colour and there is no edge to
+   point at. `--band-from` is therefore always the previous section's
+   `--band-to`; keep the chain honest when reordering sections. */
+.band {
+  background-color: var(--band-to);
+  background-image: linear-gradient(
+    to bottom,
+    var(--band-from) 0,
+    var(--band-to) clamp(12rem, 28vh, 26rem)
+  );
+  background-repeat: no-repeat;
+}
+
+/* The room behind the contact form, in three layers, because each one answers
+   a different problem.
+
+   `.shot-pin` holds the photograph still while the section scrolls past it.
+   Sticky, not `background-attachment: fixed`: that property is ignored on iOS
+   Safari, and a CSS `url()` would also ship the raw file instead of the sized
+   AVIF next/image builds. The section clips it with `clip-path` rather than
+   `overflow-hidden`, because an overflow ancestor becomes the scrollport and
+   the pin would have nothing left to stick to.
+
+   Pinning is a wide-screen move. On a phone the form runs the full width and
+   the picture is a band at the top of the section, so it just sits there. */
+.shot-pin {
+  position: absolute;
+  inset: 0;
+  transform: translateZ(0);
+}
+
+/* `.shot-veil` is pinned with the photograph and holds it back far enough to
+   read type over. On a wide screen it goes solid before the form column, so
+   the fields sit on clean ink instead of on a gym — which is what went wrong
+   when this was one even veil across the whole width. */
+.shot-veil {
+  background-image: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--color-ink), transparent 45%) 0,
+    color-mix(in srgb, var(--color-ink), transparent 28%) 100%
+  );
+}
+
+/* `.shot-seam` spans the picture's whole region and is deliberately NOT
+   pinned, so it can close the region's top and bottom edges on the grounds
+   either side. That is the only thing keeping the joins with Photos above and
+   the footer below invisible. */
+.shot-seam {
+  background-image: linear-gradient(
+    to bottom,
+    var(--color-ash) 0,
+    transparent 18%,
+    transparent 72%,
+    var(--color-ink) 100%
+  );
+}
+
+@media (min-width: 64rem) {
+  .shot-pin {
+    position: sticky;
+    inset: auto;
+    top: 0;
+    height: 100svh;
+  }
+
+  .shot-veil {
+    background-image: linear-gradient(
+      to right,
+      color-mix(in srgb, var(--color-ink), transparent 55%) 0,
+      color-mix(in srgb, var(--color-ink), transparent 42%) 32%,
+      var(--color-ink) 86%
+    );
+  }
+}
+
+/* ── Section scrolling ────────────────────────────────────────────
+   The page settles on section edges instead of stopping anywhere.
+
+   `mandatory` with `scroll-snap-stop: always`, so one flick moves exactly one
+   screen and nothing can be skipped past. The catch is that a mandatory
+   scroller must come to rest on a snap point, so a section taller than the
+   viewport would be unstoppable in the middle — which is why Services,
+   Photos and Contact carry a <SnapRail>, laying a snap point every screenful
+   down their length. Short sections need nothing: their own top is the only
+   stop they have.
+
+   The equipment gallery keeps its own nested mandatory scroller. That is a
+   separate scrollport, so the two do not argue: it paginates photographs,
+   this snaps sections, and its overscroll chains back out to here. */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Gated on scripting for the same reason `.reveal` is: the rails that make a
+   tall section stoppable are measured at runtime, so without JS a mandatory
+   page would trap you in the middle of Services with no way to rest there. */
+@media (scripting: enabled) {
+  html {
+    scroll-snap-type: y mandatory;
+  }
+}
+
+.snap-section {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
 @keyframes nudge {
   0%,
   100% {
@@ -135,6 +266,17 @@ body {
 
   .no-scrollbar {
     scroll-behavior: auto;
+  }
+
+  html {
+    scroll-behavior: auto;
+    scroll-snap-type: none;
+  }
+
+  .shot-pin {
+    position: absolute;
+    inset: 0;
+    height: auto;
   }
 
   .reveal,

@@ -1,5 +1,6 @@
 import { MAPS, PHONE, TEL } from "../_lib/site";
 import HeroBackdrop from "./hero-backdrop";
+import SnapRail from "./snap-rail";
 
 const facts = [
   { label: "Open", value: "Daily, 06:00 — 23:00" },
@@ -9,8 +10,9 @@ const facts = [
 
 export default function Hero() {
   return (
-    <section className="grain relative isolate flex min-h-[100svh] flex-col overflow-hidden">
+    <section className="snap-section grain relative isolate flex min-h-[100svh] flex-col overflow-hidden">
       <HeroBackdrop />
+      <SnapRail />
 
       <header className="relative z-10 flex items-baseline justify-between px-6 pt-7 sm:px-10 lg:px-16">
         <a
